@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            position: relative;
+            background-image: url("./assets/bg.png");
+            background-size: contain;
+        }
+
+        .map {
+            background-color: white;
+            padding: 5px;
+            margin: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .box {
+            height: 40px;
+            width: 40px;
+            border-radius: 5px;
+            border: 4px solid transparent
+        }
+
+        .land {
+            background-color: #f0e4b4;
+        }
+
+        .mountain {
+            background-image: url("./assets/mountain.png");
+            background-size: contain;
+        }
+
+        .player {
+            background-color: #97ec73;
+            border: 4px solid #1bc300
+        }
+
+        .river {
+            background-image: url("./assets/water.png");
+            background-size: contain;
+        }
+
+        .error {
+            background-color: #e9bd90;
+            border: 4px solid #f90004
+        }
+
+        .fence {
+            background-image: url("./assets/fence.png");
+            background-size: contain;
+        }
+
+        .forest {
+            background-image: url("./assets/tree.png");
+            background-size: contain;
+        }
+
+        .house {
+            background-image: url("./assets/house.png");
+            background-size: contain;
+        }
+
+        .bigbox {
+            height: 100px;
+            width: 100px;
+            border-radius: 5px;
+            border: 4px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .spring {
+            background-color: #69be6b;
+            border: 4px solid #398f44;
+        }
+
+        .summer {
+            background-color: #fde77a;
+            border: 4px solid #d4c115;
+            color: black;
+        }
+
+        .autumn {
+            background-color: #eabd94;
+            border: 4px solid #684318;
+        }
+
+        .winter {
+            background-color: #59d3eb;
+            border: 4px solid #2e94a4;
+        }
+
+        .missions {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .child {
+            display: flex;
+            flex: 6 0 40%;
+            /* explanation below */
+            margin: 5px;
+            padding: 5px;
+            height: 150px;
+            border-radius: 15px;
+            background-color: #363636;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+        }
+
+        .child-image {
+            height: 80px;
+        }
+
+        .child-title {
+            color: white;
+        }
+
+        .child-description {
+            color: white;
+        }
+
+        .cover {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            background-color: white;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .active {
+            border: 5px solid white;
+            box-shadow: 2px 2px #363636;
+        }
+
+        .game-over {
+            width: 100vw;
+            height: 100vh;
+            background-color: lightcoral;
+            position: absolute;
+            z-index: 6;
+            opacity: 0;
+            transition: all 1s;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            display: none;
+            background-image: url("assets/bg-potato.png");
+            background-size: 100%;
+            gap: 1rem;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cover"></div>
+    <div class="game-over">
+        <img style="width: 200px;height: 200px;" src="./assets/potato.png" alt="">
+        <div>
+            <h1>Total Score: </h1>
+            <span class="game-over-scr">0 pts</span>
+        </div>
+    </div>
+    <header style="position:relative;z-index: 5;display:flex;justify-content: space-between;">
+        <h1 style="margin:20px;">Potato Map</h1>
+        <div style="display: flex;flex-direction: column;justify-content: center; align-items: center;">
+            <div style="display:flex; gap:1rem;padding: 20px;">
+                <div class="spring bigbox">
+                    Spring:
+                    <span class="spring-score">0 pts</span>
+                </div>
+                <div class="summer bigbox">
+                    Summer:
+                    <span class="summer-score">0 pts</span>
+                </div>
+                <div class="autumn bigbox">
+                    Autumn:
+                    <span class="autumn-score">0 pts</span>
+                </div>
+                <div class="winter bigbox">
+                    Winter:
+                    <span class="winter-score">0 pts</span>
+                </div>
+            </div>
+            <div class="score">
+                Total: <span class="total-scr">0</span> pts
+            </div>
+        </div>
+    </header>
+    <main style="position:relative;z-index: 5;display:flex;width: 100%; gap:5rem;">
+        <table class="map"></table>
+        <section class="ui" style="width: 50%;">
+            <div class="missions">
+                <h1>Current Season: <span class="season-indicator">Summer (BC)</span></h1>
+                <hr style="width: 100%;border: 1px solid black;" />
+                <div class="head-child" style="display: flex;width: 100%;flex-wrap: wrap;">
+                </div>
+                <h1>Elapsed time in current season: <span class="cur-season-cnt"></span></h1>
+                <hr style="width: 100%;border: 1px solid black;" />
+                <div class="current-element">
+                    <table class="cur-el-display">
+                        <tr>
+                            <td class="box s00"></td>
+                            <td class="box s01"></td>
+                            <td class="box s02"></td>
+                            <td class="box s03"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="box s10"></td>
+                            <td class="box s11"></td>
+                            <td class="box s12"></td>
+                            <td class="box s13"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="box s20"></td>
+                            <td class="box s21"></td>
+                            <td class="box s22"></td>
+                            <td class="box s23"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="box s30"></td>
+                            <td class="box s31"></td>
+                            <td class="box s32"></td>
+                            <td class="box s33"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="./index.js"></script>
+</body>
+
+</html>
